@@ -1,8 +1,17 @@
-import os.path
+import sqlite3
+import os
 import sys
 import codecs
-import numpy
 import csv
+import scipy
+import numpy
+import gensim
+import sklearn
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn import svm
+from sklearn.ensemble import GradientBoostingClassifier
+import xgboost
+import random
 
 ######################################
 ###### Special printing methods ######
@@ -138,11 +147,11 @@ def HDP(vectorized, vec_titles):
 
 def tSNE(input_filename, output_filename, header=True, n_dim=2):
     if header:
-        raw_data = np.genfromtxt(input_filename, delimiter=",", headerfilling_values=(0, 0, 0), skiprows=1)
+        raw_data = numpy.genfromtxt(input_filename, delimiter=",", headerfilling_values=(0, 0, 0), skiprows=1)
     else:
-        raw_data = np.genfromtxt(input_filename, delimiter=",", headerfilling_values=(0, 0, 0))
+        raw_data = numpy.genfromtxt(input_filename, delimiter=",", headerfilling_values=(0, 0, 0))
     compressed_data = sklearn.manifold.TSNE(n_dim).fit_transform(raw_data)
-    np.savetxt(output_filename, compressed_data, delimiter=",")
+    numpy.savetxt(output_filename, compressed_data, delimiter=",")
 
 #########################################
 ############## Vectorize ################
@@ -159,8 +168,8 @@ def Vectorize(sentences, dictionary):
         vector = vectorizer.transform([i[0]]).toarray().tolist()
         X_list.append(vector[0])
         y_list.append(i[1])
-    X = np.array(X_list)
-    y = np.array(y_list)
+    X = numpy.array(X_list)
+    y = numpy.array(y_list)
     return X, y
 
 ####################
@@ -175,17 +184,17 @@ def SVM_Kfolds(x, y, k, kernel = 'linear', C = 1.0, gamma = 0.001, times = 1):
     testsize = len(y)/k
     # Correct Prediction, True Positive, True Negative, Incorrect Prediction, False Positive, False Negative
     counts = [{"CP":0, "TP": 0, "TN":0, "IP":0, "FP":0, "FN":0} for t in xrange(k*times)]
-    if type(x) == type(np.array([])):
+    if type(x) == type(numpy.array([])):
         x = x.tolist()
-    if type(y) == type(np.array([])):
+    if type(y) == type(numpy.array([])):
         y = y.tolist()
     xysets = [row+[y[num]] for num,row in enumerate(x)]
     for t in xrange(k*times):
-        np.random.shuffle(xysets)
+        numpy.random.shuffle(xysets)
         y_list = [xyset[-1] for xyset in xysets]
         X_list = [xyset[:-1] for xyset in xysets]
-        X = np.array(X_list)
-        y = np.array(y_list)
+        X = numpy.array(X_list)
+        y = numpy.array(y_list)
         #Define classifier
         clf = svm.SVC(kernel = kernel, C = C, gamma = gamma)
         clf.fit(X[:-testsize],y[:-testsize])
@@ -239,9 +248,9 @@ def SVM_Kfolds(x, y, k, kernel = 'linear', C = 1.0, gamma = 0.001, times = 1):
 
 def SVM_weights(x, y, feature_names, kernel = 'linear', C = 1.0, gamma = 0.001):
     if type(x) == type([]):
-        x = np.array(x)
+        x = numpy.array(x)
     if type(y) == type([]):
-        y = np.array(y)
+        y = numpy.array(y)
     clf = svm.SVC(kernel = kernel, C = C, gamma = gamma)
     clf.fit(x,y)
     weights = clf.coef_.tolist()[0]
@@ -255,17 +264,17 @@ def GBM_Kfolds(x, y, k, n_estimators=100, subsample=0.8, max_depth=3, times=1):
     f1s = []
     testsize = len(sentences)/k
     counts = [{"CP":0, "TP": 0, "TN":0, "IP":0, "FP":0, "FN":0} for t in xrange(k*times)]
-    if type(x) == type(np.array([])):
+    if type(x) == type(numpy.array([])):
         x = x.tolist()
-    if type(y) == type(np.array([])):
+    if type(y) == type(numpy.array([])):
         y = y.tolist()
     xysets = [row+[y[num]] for num,row in enumerate(x)]
     for t in xrange(k*times):
-        np.random.shuffle(xysets)
+        numpy.random.shuffle(xysets)
         y_list = [xyset[-1] for xyset in xysets]
         X_list = [xyset[:-1] for xyset in xysets]
-        X = np.array(X_list)
-        y = np.array(y_list)
+        X = numpy.array(X_list)
+        y = numpy.array(y_list)
         #Define classifier
         clf = GradientBoostingClassifier(n_estimators=n_estimators, subsample=subsample, max_depth=max_depth)
         clf.fit(X[:-testsize],y[:-testsize])
@@ -323,17 +332,17 @@ def XGBoost_Kfolds(x, y, k, probability_cutoff=0.5, max_depth=2, eta=1, silent=1
     f1s = []
     testsize = len(sentences)/k
     counts = [{"CP":0, "TP": 0, "TN":0, "IP":0, "FP":0, "FN":0} for t in xrange(k*times)]
-    if type(x) == type(np.array([])):
+    if type(x) == type(numpy.array([])):
         x = x.tolist()
-    if type(y) == type(np.array([])):
+    if type(y) == type(numpy.array([])):
         y = y.tolist()
     xysets = [row+[y[num]] for num,row in enumerate(x)]
     for t in xrange(k*times):
-        np.random.shuffle(xysets)
+        numpy.random.shuffle(xysets)
         y_list = [xyset[-1] for xyset in xysets]
         X_list = [xyset[:-1] for xyset in xysets]
-        X = np.array(X_list)
-        y = np.array(y_list)
+        X = numpy.array(X_list)
+        y = numpy.array(y_list)
         #Define classifier
         # specify parameters via map
         param = {'max_depth':max_depth, 'eta':eta, 'silent':silent, 'objective':objective}
