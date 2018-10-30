@@ -13,6 +13,7 @@ from sklearn import svm
 from sklearn.ensemble import GradientBoostingClassifier
 import xgboost
 import random
+import sqlite3
 
 ######################################
 ###### Special printing methods ######
@@ -407,6 +408,11 @@ def XGBoost_Kfolds(x, y, k, probability_cutoff=0.5, max_depth=2, eta=1, silent=1
 ##########################################
 ############## CSV and SQL ###############
 ##########################################
+
+def Connect(dbname):
+    conn = sqlite3.connect(dbname)
+    c = conn.cursor()
+    return conn,c
 
 def CSVcreateSQL(titles, dbname, tablename):
     conn, c = Connect(dbname)
