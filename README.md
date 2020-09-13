@@ -19,3 +19,9 @@ Useful methods I like to import to save time
 * __line_count_rawgen(filepath, last_index_csv=True)__ : Fast way to count lines in a file
 * __read_dict(filename)__ : Get a word list text file (a word per line) into a list
 * __flatten(container)__ : Make a list like [1,[2,3],[4,[5]]] into [1,2,3,4,5]
+
+## CSV and SQL 
+
+* __CSVcreateSQL(titles, dbname, tablename)__ : create empty SQL table from a csv file column titles
+* __CSVtoSQL(titles, table, dbname, tablename)__ : copy csv into the created SQL table
+* __SQLtoCSV(dbname)__ : make a csv by table from a SQL database
