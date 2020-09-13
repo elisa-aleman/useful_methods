@@ -6,7 +6,6 @@ import codecs
 import csv
 import numpy
 import pandas
-import pathlib
 from io import StringIO
 
 ######################################
@@ -31,7 +30,7 @@ def down():
 
 def print_STD_log(strlog, log_file): 
     '''
-    Print to terminal and to file at the same time
+    Print string to terminal and to file at the same time
     '''
     with codecs.open(log_file, 'a', 'utf-8') as logf:
         print(strlog)
@@ -81,9 +80,9 @@ def append_tuple_to_csv(ins_tuple, filepath):
         csv_out=csv.writer(out, delimiter=',', quotechar='"', lineterminator='\n', quoting=csv.QUOTE_MINIMAL)
         csv_out.writerow(ins_tuple)
         
-######################################
-###### Data organizing methods #######
-######################################
+################################################
+###### Data reading / organizing methods #######
+################################################
 
 def tail(filepath, decode_utf8=True, with_head=True, pandas_read=True):
     '''
