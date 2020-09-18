@@ -6,6 +6,7 @@ import codecs
 import csv
 import numpy
 import pandas
+import swifter
 from io import StringIO
 
 ######################################
