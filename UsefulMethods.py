@@ -13,6 +13,9 @@ from io import StringIO
 ###### Special printing methods ######
 ######################################
 
+def clear():
+    os.system('cls||clear')
+
 def up():
     '''
     Go up a line in the terminal to print over something
