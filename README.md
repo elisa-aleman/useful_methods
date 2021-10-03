@@ -1,5 +1,5 @@
 # Useful Methods
-Useful methods I like to import to save time
+Useful methods I like to import to save time. I stopped using a lot of them when I started using pandas, but the ProjectPaths.py I use frequently.
 
 ## Special printing methods
 
